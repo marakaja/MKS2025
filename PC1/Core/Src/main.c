@@ -114,12 +114,26 @@ int main(void)
     /* USER CODE END WHILE */
 	  /* for(uint8_t i = 0; i < sizeof(morse_pattern); i++)
 	  	  {
-	  		(morse_pattern[i])?LED_ON:LED_OFF;
+	  		if(morse_pattern[i])
+			{
+				LED_ON;
+			}
+			else
+			{
+				LED_OFF;
+			}
 	  		LL_mDelay(200);
 	  	  }*/
-	  for(uint8_t i = 0; i < MORSE_BIN_LEN; i++)
+	  for (uint8_t i = 0; i < MORSE_BIN_LEN; i++)
 	  {
-		(morse_pattern_bin & (1<<(MORSE_BIN_LEN - i)))?LED_ON:LED_OFF;
+		if(morse_pattern_bin & (1UL<<(MORSE_BIN_LEN - i)))
+		{
+			LED_ON;
+		}
+		else
+		{
+			LED_OFF;
+		}
 		LL_mDelay(200);
 	  }
 
