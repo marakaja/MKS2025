@@ -55,8 +55,8 @@ static void MX_USART2_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
-static uint8_t morse_pattern[] = {
+/*
+ static uint8_t morse_pattern[] = {
  1,0,1,0,1, // S
  0,0, //
  1,1,1, 0, 1,1,1, 0, 1,1,1, //O
@@ -64,6 +64,10 @@ static uint8_t morse_pattern[] = {
  1,0,1,0,1, // S
  0,0,0,0,0,0,0 //
 };
+ */
+#define MORSE_BIN_LEN (sizeof(morse_pattern_bin) * 8)
+ static uint32_t morse_pattern_bin = 0b10101001110111011100101010000000;
+
 
 /* USER CODE END 0 */
 
@@ -108,11 +112,18 @@ int main(void)
   {
 
     /* USER CODE END WHILE */
-	  for(uint8_t i = 0; i < sizeof(morse_pattern); i++)
+	  /* for(uint8_t i = 0; i < sizeof(morse_pattern); i++)
 	  	  {
 	  		(morse_pattern[i])?LED_ON:LED_OFF;
 	  		LL_mDelay(200);
-	  	  }
+	  	  }*/
+	  for(uint8_t i = 0; i < MORSE_BIN_LEN; i++)
+	  {
+		(morse_pattern_bin & (1<<(MORSE_BIN_LEN - i)))?LED_ON:LED_OFF;
+		LL_mDelay(200);
+	  }
+
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
