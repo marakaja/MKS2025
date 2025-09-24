@@ -56,6 +56,15 @@ static void MX_USART2_UART_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+static uint8_t morse_pattern[] = {
+ 1,0,1,0,1, // S
+ 0,0, //
+ 1,1,1, 0, 1,1,1, 0, 1,1,1, //O
+ 0,0, //
+ 1,0,1,0,1, // S
+ 0,0,0,0,0,0,0 //
+};
+
 /* USER CODE END 0 */
 
 /**
@@ -97,12 +106,13 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  LL_GPIO_ResetOutputPin(LD2_GPIO_Port, LD2_Pin);
-	  LL_mDelay(200);
-	  LL_GPIO_SetOutputPin(LD2_GPIO_Port, LD2_Pin);
-	  LL_mDelay(200);
-    /* USER CODE END WHILE */
 
+    /* USER CODE END WHILE */
+	  for(uint8_t i = 0; i < sizeof(morse_pattern); i++)
+	  	  {
+	  		(morse_pattern[i])?LED_ON:LED_OFF;
+	  		LL_mDelay(200);
+	  	  }
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
