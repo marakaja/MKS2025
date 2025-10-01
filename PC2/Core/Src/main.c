@@ -35,7 +35,8 @@
 #define LED_TIME_SHORT 100
 #define LED_TIME_LONG 1000
 
-#define BUT_DEB_TIME 40
+#define BUT_DEB_TIME_SIMPLE 40
+#define BUT_DEB_TIME_ADV 5
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -57,6 +58,7 @@ static void MX_USART2_UART_Init(void);
 void blink(void);
 void button(void);
 void button_deb_simple(void);
+void button_deb_adv(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -105,7 +107,7 @@ int main(void)
   while (1)
   {
 	  blink();
-	  button_deb_simple();
+	  button_deb_adv();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -311,12 +313,57 @@ void blink(void)
 void button_deb_simple(void)
 {
 	static uint32_t last_debounce_time;
-	if((last_debounce_time + BUT_DEB_TIME) > Tick)
+	if((last_debounce_time + BUT_DEB_TIME_SIMPLE) > Tick)
 	{
 		button();
 		last_debounce_time = Tick;
 	}
 }
+
+void button_deb_adv(void)
+{
+	static uint32_t last_debounce_time;
+	static uint32_t off_time;
+
+	if((last_debounce_time + BUT_DEB_TIME_ADV) > Tick)
+	{
+		static uint16_t S1_deb, S2_deb;
+		S1_deb <<= 1;
+		S2_deb <<= 1;
+
+		if(LL_GPIO_IsInputPinSet(S1_GPIO_Port, S1_Pin))
+		{
+			S1_deb |= 0x001;
+		}
+
+		if(LL_GPIO_IsInputPinSet(S2_GPIO_Port, S2_Pin))
+		{
+			S2_deb |= 0x001;
+		}
+
+		if(S1_deb == 0x7FFF)
+		{
+			off_time = Tick + LED_TIME_LONG;
+			LL_GPIO_SetOutputPin(LED1_GPIO_Port, LED1_Pin);
+		}
+		if(S2_deb == 0x7FFF)
+		{
+			off_time = Tick + LED_TIME_SHORT;
+			LL_GPIO_SetOutputPin(LED1_GPIO_Port, LED1_Pin);
+		}
+
+
+		last_debounce_time = Tick;
+
+	}
+
+	if (Tick > off_time)
+	{
+		LL_GPIO_ResetOutputPin(LED1_GPIO_Port, LED1_Pin);
+	}
+}
+
+
 
 void button(void)
 {
