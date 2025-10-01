@@ -128,11 +128,11 @@ int main(void)
 	  {
 		if(morse_pattern_bin & (1UL<<(MORSE_BIN_LEN - i)))
 		{
-			LED_ON;
+			LED_ON();
 		}
 		else
 		{
-			LED_OFF;
+			LED_OFF();
 		}
 		LL_mDelay(200);
 	  }

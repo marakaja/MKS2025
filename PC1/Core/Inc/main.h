@@ -98,8 +98,8 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN Private defines */
 
-#define LED_OFF LL_GPIO_ResetOutputPin(LD2_GPIO_Port, LD2_Pin)
-#define LED_ON LL_GPIO_SetOutputPin(LD2_GPIO_Port, LD2_Pin)
+#define LED_OFF() LL_GPIO_ResetOutputPin(LD2_GPIO_Port, LD2_Pin)
+#define LED_ON() LL_GPIO_SetOutputPin(LD2_GPIO_Port, LD2_Pin)
 
 /* USER CODE END Private defines */
 
