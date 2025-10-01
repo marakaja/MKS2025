@@ -34,6 +34,8 @@
 #define LED_TIME_BLINK 300
 #define LED_TIME_SHORT 100
 #define LED_TIME_LONG 1000
+
+#define BUT_DEB_TIME 40
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -54,6 +56,7 @@ static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
 void blink(void);
 void button(void);
+void button_deb_simple(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -102,7 +105,7 @@ int main(void)
   while (1)
   {
 	  blink();
-	  button();
+	  button_deb_simple();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -302,6 +305,16 @@ void blink(void)
 	if (Tick > delay + LED_TIME_BLINK) {
 		LL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
 		delay = Tick;
+	}
+}
+
+void button_deb_simple(void)
+{
+	static uint32_t last_debounce_time;
+	if((last_debounce_time + BUT_DEB_TIME) > Tick)
+	{
+		button();
+		last_debounce_time = Tick;
 	}
 }
 
