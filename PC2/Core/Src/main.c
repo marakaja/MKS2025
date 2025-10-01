@@ -313,7 +313,7 @@ void blink(void)
 void button_deb_simple(void)
 {
 	static uint32_t last_debounce_time;
-	if((last_debounce_time + BUT_DEB_TIME_SIMPLE) > Tick)
+	if(Tick > (last_debounce_time + BUT_DEB_TIME_SIMPLE))
 	{
 		button();
 		last_debounce_time = Tick;
@@ -325,7 +325,7 @@ void button_deb_adv(void)
 	static uint32_t last_debounce_time;
 	static uint32_t off_time;
 
-	if((last_debounce_time + BUT_DEB_TIME_ADV) > Tick)
+	if(Tick > (last_debounce_time + BUT_DEB_TIME_ADV))
 	{
 		static uint16_t S1_deb, S2_deb;
 		S1_deb <<= 1;
