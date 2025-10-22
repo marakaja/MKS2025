@@ -101,7 +101,7 @@ void sct_led(uint32_t value)
 	PULSE_LA();
 }
 
-void sct_value(uint16_t value, uint8_t led)
+void sct_value(uint16_t value, uint8_t led, uint8_t dot)
 {
 	uint32_t reg = 0;
 	led =  (led>8)?8:led;
@@ -110,6 +110,9 @@ void sct_value(uint16_t value, uint8_t led)
 	reg |= reg_values[1][value / 10 % 10];
 	reg |= reg_values[2][value / 1 % 10];
 	reg |= get_bar_mask(led);
+	reg |= (dot==1)?(1<<(16)):0;
+	reg |= (dot==2)?(1<<(3)):0;
+	reg |= (dot==3)?(1<<(0)):0;
 
 	sct_led(reg);
 }
