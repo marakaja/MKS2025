@@ -174,6 +174,10 @@ int main(void)
 
   HAL_ADCEx_Calibration_Start(&hadc);
   HAL_ADC_Start(&hadc);
+
+  unsigned long lastUpdate = HAL_GetTick();
+  OWConvertAll();
+  uint8_t updateReady = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -181,21 +185,30 @@ int main(void)
   while (1)
   {
 	  static uint8_t select = 0;
-
-	  if(select == 1)
+	  if(lastUpdate + CONVERT_T_DELAY > HAL_GetTick())
 	  {
 		  OWConvertAll();
-		  HAL_Delay(CONVERT_T_DELAY);
+		  lastUpdate = HAL_GetTick();
+		  updateReady = 1;
 
-		  static int16_t temp = 0;
-		  if(!OWReadTemperature(&temp))
+	  }
+	  if(select == 1)
+	  {
+
+		  if(updateReady)
 		  {
-			sct_value(0, 8, 0);
+			  static int16_t temp = 0;
+			  if(!OWReadTemperature(&temp))
+			  {
+				sct_value(0, 8, 0);
+			  }
+			  else
+			  {
+				sct_value(temp/10, 0, 2);
+			  }
 		  }
-		  else
-		  {
-			sct_value(temp/10, 0, 2);
-		  }
+
+
 		  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, 1);
 		  HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, 0);
 	  }
